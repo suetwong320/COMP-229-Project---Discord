@@ -2,7 +2,31 @@
 
 <div className="chatroom-container container container-body">
   <div class="row chatcord-row">
-    <div class="left col-md-2 mb-2 mb-sm-0">Hi</div>
+    <% if (loggedInUsername) { %>
+
+    <div class="left col-md-2 mb-2 mb-sm-0">
+      <div style="width: 100%; margin: auto">
+        <img
+          src="https://i1.wp.com/images.binaryfortress.com/General/UnknownUser1024.png?ssl=1"
+          alt=""
+          style="
+            width: 70px;
+            margin: 0 auto;
+            display: block;
+            border-radius: 50%;
+            margin-top: 30px;
+          "
+        />
+        <h5 style="text-align: center; color: white; margin-top: 30px">
+          <%= loggedInUsername %>
+
+          <br />
+          <br />
+
+          <a href="/logout" style="color: white; font-size: 1rem">Logout</a>
+        </h5>
+      </div>
+    </div>
     <div class="mid col-md-8 mb-3 mb-sm-0">
       <div class="chat-area">
         <div class="chat">
@@ -13,6 +37,7 @@
       </div>
       <div class="input-area-div">
         <input type="text" class="input-area" placeholder="Type here..." />
+        <button class="submit-btn">Submit</button>
         <p style="margin: 0px; text-align: center">Be nice here :)</p>
       </div>
     </div>
@@ -28,6 +53,16 @@
         </ul>
       </div>
     </div>
+
+    <% } else { %>
+    <!-- Content to show when user is not logged in -->
+    <div class="col-md-12 text-center">
+      <p>
+        You are not logged in. Please <a href="/login">login</a> to access this
+        page.
+      </p>
+    </div>
+    <% } %>
   </div>
 
   <%- include partials/bottom_nav.ejs %> <%- include partials/footer.ejs %>

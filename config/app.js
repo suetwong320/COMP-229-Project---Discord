@@ -18,9 +18,6 @@ mongoDB.once("open", () => {
 });
 
 var indexRouter = require("../routes/index");
-var usersRouter = require("../routes/users");
-var projectsRouter = require("../routes/project");
-var contactRouter = require("../routes/contact");
 var registerRouter = require("../routes/register");
 var loginRouter = require("../routes/login");
 

@@ -1,49 +1,75 @@
 var express = require("express");
 var router = express.Router();
 const session = require("express-session");
+const Chat = require("../models/chat");
+const User = require("../models/user");
 
-/* GET home page. */
-router.get("/", function (req, res, next) {
-  const loggedInUsername = req.session.loggedInUsername;
+router.get("/", async (req, res, next) => {
+  try {
+    const loggedInUsername = req.session.loggedInUsername;
+    const chatMessages = await Chat.find().sort({ date: -1 }).limit(10);
 
-  res.render("index", { title: "Discord", loggedInUsername });
+    // Fetch the list of users
+    const users = await User.find();
+
+    res.render("index", {
+      title: "Discord",
+      loggedInUsername,
+      chatMessages,
+      users,
+    });
+  } catch (error) {
+    console.error("Error fetching chat messages:", error);
+    res.render("index", {
+      title: "Discord",
+      loggedInUsername,
+      chatMessages: [],
+      users: [],
+    });
+  }
 });
 
 router.get("/logout", (req, res, next) => {
-  // Clear the session
   req.session.destroy((err) => {
     if (err) {
-      console.error(err); // Log the error for debugging
+      console.error(err);
       return res.status(500).json({ message: "An error occurred" });
     }
-    // Redirect to the login page after logout
     res.redirect("/login");
   });
 });
 
-// /* GET home page. */
-// router.get("/login", function (req, res, next) {
-//   res.render("login", { title: "Login" });
-// });
+router.post("/submit-chat", async (req, res, next) => {
+  const loggedInUsername = req.session.loggedInUsername;
+  const chatMessage = req.body.message;
 
-// /* GET about page. */
-// router.get("/register", function (req, res, next) {
-//   res.render("register", { title: "Register" });
-// });
+  try {
+    const newChat = new Chat({
+      username: loggedInUsername,
+      comment: chatMessage,
+    });
 
-// /* GET contact page. */
-// router.get("/contact", function (req, res, next) {
-//   res.render("index", { title: "Contact" });
-// });
+    await newChat.save();
 
-// /* GET project page. */
-// router.get("/project", function (req, res, next) {
-//   res.render("index", { title: "Project" });
-// });
+    res.status(200).json({ message: "Chat submitted successfully." });
+  } catch (error) {
+    console.error("Error submitting chat:", error);
+    res
+      .status(500)
+      .json({ message: "An error occurred while submitting chat." });
+  }
+});
 
-// /* GET service page. */
-// router.get("/service", function (req, res, next) {
-//   res.render("index", { title: "Service" });
-// });
+router.get("/users", async (req, res, next) => {
+  try {
+    const users = await User.find();
+    res.status(200).json(users); // Send the users as JSON response
+  } catch (error) {
+    console.error("Error fetching users:", error);
+    res
+      .status(500)
+      .json({ message: "An error occurred while fetching users." });
+  }
+});
 
 module.exports = router;

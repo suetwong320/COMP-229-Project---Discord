@@ -18,10 +18,12 @@
 }
 
 .chat-area {
+  display: flex;
   height: 80vh;
   overflow: auto;
   overflow-x: hidden;
   padding: 10px;
+  flex-direction: column-reverse;
 }
 
 .chat {
@@ -31,6 +33,7 @@
   overflow-wrap: break-word;
   border-radius: 15px;
   margin-left: 10px;
+  margin-top: 10px;
 }
 
 .input-area-div {
@@ -72,5 +75,8 @@
   .left {
     height: 100%;
     padding: 20px !important;
+  }
+  .right {
+    height: 100%;
   }
 }
